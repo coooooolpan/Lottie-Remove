@@ -3,487 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LottieLab 水印擦擦擦</title>
-    <style>
-        :root {
-            --apple-blue: #007AFF;
-            --apple-light-gray: #F5F5F7;
-            --apple-dark-gray: #86868B;
-            --apple-success: #34C759;
-            --apple-error: #FF3B30;
-            --apple-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            --border-radius: 10px;
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--apple-font);
-            background-color: var(--apple-light-gray);
-            color: #1D1D1F;
-            line-height: 1.5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            max-width: 600px;
-            padding: 40px;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        p {
-            color: var(--apple-dark-gray);
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
-
-        .upload-area {
-            border: 2px dashed #E5E5EA;
-            border-radius: var(--border-radius);
-            padding: 30px;
-            margin-bottom: 20px;
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .upload-area:hover, .upload-area.dragover {
-            border-color: var(--apple-blue);
-            background-color: rgba(0, 122, 255, 0.05);
-        }
-
-        .upload-icon {
-            font-size: 40px;
-            color: var(--apple-blue);
-            margin-bottom: 15px;
-        }
-
-        .file-info {
-            margin: 20px 0;
-            padding: 15px;
-            background-color: var(--apple-light-gray);
-            border-radius: var(--border-radius);
-            display: none;
-        }
-
-        .file-name {
-            font-weight: 500;
-            word-break: break-all;
-        }
-
-        .btn {
-            background-color: var(--apple-blue);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            margin: 10px 5px;
-            outline: none;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        .btn:active {
-            transform: translateY(1px);
-        }
-
-        .btn:disabled {
-            background-color: var(--apple-dark-gray);
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--apple-blue);
-            border: 1px solid var(--apple-blue);
-        }
-
-        .btn-download {
-            display: none;
-            background-color: var(--apple-success);
-        }
-
-        .status {
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            display: none;
-        }
-
-        .status.success {
-            background-color: rgba(52, 199, 89, 0.1);
-            color: var(--apple-success);
-        }
-
-        .status.error {
-            background-color: rgba(255, 59, 48, 0.1);
-            color: var(--apple-error);
-        }
-
-        .progress-container {
-            margin: 20px 0;
-            display: none;
-        }
-
-        .progress-bar {
-            height: 6px;
-            background-color: #E5E5EA;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress {
-            height: 100%;
-            background-color: var(--apple-blue);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        footer {
-            margin-top: 30px;
-            color: var(--apple-dark-gray);
-            font-size: 14px;
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
-            }
-            
-            .btn {
-                width: 100%;
-                margin: 10px 0;
-            }
-        }
-    </style>
+    <title>水印擦擦擦</title>
+    <!-- 引入 Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Round" rel="stylesheet">
+    <!-- 引入自定义样式表 -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>水印擦擦擦 ✨</h1>
-        <p>一键移除 Lottie 动画中的水印图层 🎯</p>
-        
-        <div class="upload-area" id="uploadArea">
-            <div class="upload-icon">↑</div>
-            <div>拖放或点击上传 JSON 文件 📄</div>
-            <div style="font-size: 14px; color: var(--apple-dark-gray); margin-top: 5px;">.json 格式 ✨</div>
-            <input type="file" id="fileInput" accept=".json" style="display: none;">
+    <!-- 页面头部导航栏 -->
+    <header>
+        <div class="header-content">
+            <div class="app-title">Lottie Remove</div>
+            <!-- 主题切换按钮 -->
+            <button class="theme-toggle" id="themeToggle">
+                <span class="material-icons-round">light_mode</span>
+            </button>
         </div>
-        
-        <div class="file-info" id="fileInfo">
-            <div>选中文件 📎</div>
-            <div class="file-name" id="fileName"></div>
-        </div>
-        
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar">
-                <div class="progress" id="progressBar"></div>
+    </header>
+    
+    <div class="wrapper">
+        <main>
+            <!-- 主标题区域 -->
+            <section class="hero-section">
+                <h1>摆脱 Lottie 水印</h1>
+                <p class="subtitle">一键移除 Lottie 动画中的水印图层，简单、快速、安全</p>
+            </section>
+            
+            <!-- 主要内容卡片容器 -->
+            <div class="card-container" id="mainContainer">
+                <!-- 文件上传区域 -->
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <span class="material-icons-round">arrow_upward</span>
+                    </div>
+                    <div class="upload-title">拖放或点击上传 JSON 文件</div>
+                    <input type="file" id="fileInput" accept=".json" style="display: none;">
+                </div>
+                
+                <!-- 文件信息显示区域 -->
+                <div class="file-info" id="fileInfo">
+                    <div class="file-info-title">已选文件</div>
+                    <div class="file-name" id="fileName">
+                        <span class="material-icons-round">task</span>
+                        <span id="fileNameText"></span>
+                    </div>
+                    <div class="file-size-info">
+                        <span id="fileSize">0 KB</span>
+                    </div>
+                </div>
+                
+                <!-- 进度条显示区域 -->
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-info">
+                        <span>处理中</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" id="progressBar"></div>
+                    </div>
+                </div>
+                
+                <!-- 状态消息显示区域 -->
+                <div class="status" id="statusMessage"></div>
+                
+                <!-- 操作按钮区域 -->
+                <div class="action-buttons">
+                    <button class="btn" id="processBtn" disabled>
+                        <span class="material-icons-round">bolt</span>开始处理
+                    </button>
+                    <button class="btn btn-download" id="downloadBtn">
+                        <span class="material-icons-round">download</span>下载文件
+                    </button>
+                </div>
             </div>
-        </div>
-        
-        <div class="status" id="statusMessage"></div>
-        
-        <button class="btn" id="processBtn" disabled>开始处理 ⚡️</button>
-        <button class="btn btn-download" id="downloadBtn">下载文件 💾</button>
-        
-        <footer>
-            安全第一：所有处理都在本地完成
-        </footer>
+            
+            <!-- 特性介绍区域 -->
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">
+                        <span class="material-icons-round">lock</span>
+                    </div>
+                    <h3 class="feature-title">安全第一</h3>
+                    <p class="feature-description">所有处理都在本地完成，不会上传您的文件到任何服务器</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <span class="material-icons-round">rocket_launch</span>
+                    </div>
+                    <h3 class="feature-title">快速处理</h3>
+                    <p class="feature-description">高效算法确保快速处理您的 Lottie 动画文件</p>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const uploadArea = document.getElementById('uploadArea');
-            const fileInput = document.getElementById('fileInput');
-            const fileInfo = document.getElementById('fileInfo');
-            const fileName = document.getElementById('fileName');
-            const processBtn = document.getElementById('processBtn');
-            const downloadBtn = document.getElementById('downloadBtn');
-            const statusMessage = document.getElementById('statusMessage');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            
-            let selectedFile = null;
-            let processedData = null;
-            
-            // 点击上传区域触发文件选择
-            uploadArea.addEventListener('click', () => {
-                fileInput.click();
-            });
-            
-            // 处理拖放事件
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, preventDefaults, false);
-            });
-            
-            function preventDefaults(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            
-            ['dragenter', 'dragover'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, () => {
-                    uploadArea.classList.add('dragover');
-                }, false);
-            });
-            
-            ['dragleave', 'drop'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, () => {
-                    uploadArea.classList.remove('dragover');
-                }, false);
-            });
-            
-            uploadArea.addEventListener('drop', handleDrop, false);
-            
-            function handleDrop(e) {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-                
-                if (files.length) {
-                    handleFiles(files);
-                }
-            }
-            
-            // 文件选择处理
-            fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length) {
-                    handleFiles(e.target.files);
-                }
-            });
-            
-            function handleFiles(files) {
-                if (files[0].type !== 'application/json' && !files[0].name.endsWith('.json')) {
-                    showStatus('请选择 JSON 文件 ⚠️', 'error');
-                    return;
-                }
-                
-                selectedFile = files[0];
-                fileName.textContent = selectedFile.name;
-                fileInfo.style.display = 'block';
-                processBtn.disabled = false;
-                downloadBtn.style.display = 'none';
-                statusMessage.style.display = 'none';
-            }
-            
-            // 处理按钮点击事件
-            processBtn.addEventListener('click', () => {
-                if (!selectedFile) return;
-                
-                processBtn.disabled = true;
-                progressContainer.style.display = 'block';
-                progressBar.style.width = '0%';
-                
-                const reader = new FileReader();
-                
-                reader.onprogress = (event) => {
-                    if (event.lengthComputable) {
-                        const progress = (event.loaded / event.total) * 50; // 读取过程占总进度的50%
-                        progressBar.style.width = progress + '%';
-                    }
-                };
-                
-                reader.onload = (event) => {
-                    try {
-                        const jsonContent = event.target.result;
-                        const originalSize = new Blob([jsonContent]).size;
-                        const jsonData = JSON.parse(jsonContent);
-                        
-                        // 更新进度到75%，表示开始处理
-                        progressBar.style.width = '75%';
-                        
-                        // 模拟处理过程
-                        setTimeout(() => {
-                            try {
-                                const result = removeLottieWatermark(jsonData);
-                                // 优化JSON数据
-                                optimizeLottieJson(result);
-                                // 不使用格式化，直接紧凑序列化以减小文件体积
-                                processedData = JSON.stringify(result);
-                                
-                                // 计算文件体积减少的百分比
-                                const processedSize = new Blob([processedData]).size;
-                                const sizeDiff = originalSize - processedSize;
-                                const sizeReductionPercent = ((sizeDiff / originalSize) * 100).toFixed(2);
-                                
-                                const sizeMessage = sizeDiff > 0 
-                                    ? `文件体积减少了 ${formatFileSize(sizeDiff)} (${sizeReductionPercent}%)`
-                                    : `文件体积变化: ${formatFileSize(sizeDiff)}`;
-                                
-                                // 处理完成，更新进度到100%
-                                progressBar.style.width = '100%';
-                                
-                                setTimeout(() => {
-                                    progressContainer.style.display = 'none';
-                                    showStatus(`搞定！${sizeMessage} ✨`, 'success');
-                                    downloadBtn.style.display = 'inline-block';
-                                    processBtn.disabled = false;
-                                }, 500);
-                                
-                            } catch (error) {
-                                handleProcessingError(error);
-                            }
-                        }, 1000); // 模拟处理时间
-                        
-                    } catch (error) {
-                        handleProcessingError(new Error('读取失败 😱'));
-                    }
-                };
-                
-                reader.onerror = () => {
-                    handleProcessingError(new Error('文件读取失败 ❌'));
-                };
-                
-                reader.readAsText(selectedFile);
-            });
-            
-            // 下载按钮点击事件
-            downloadBtn.addEventListener('click', () => {
-                if (!processedData) return;
-                
-                const blob = new Blob([processedData], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                
-                // 添加"processed_"前缀到文件名
-                const originalName = selectedFile.name;
-                const processedName = 'processed_' + originalName;
-                
-                a.href = url;
-                a.download = processedName;
-                document.body.appendChild(a);
-                a.click();
-                
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                }, 0);
-            });
-            
-            // 显示状态消息
-            function showStatus(message, type) {
-                statusMessage.textContent = message;
-                statusMessage.className = 'status ' + type;
-                statusMessage.style.display = 'block';
-            }
-            
-            // 处理错误
-            function handleProcessingError(error) {
-                console.error('处理错误:', error);
-                progressContainer.style.display = 'none';
-                showStatus('处理失败: ' + (error.message || '未知错误'), 'error');
-                processBtn.disabled = false;
-            }
-            
-            // 格式化文件大小显示
-            function formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
-                if (bytes < 0) return '-' + formatFileSize(-bytes);
-                
-                const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                const i = Math.floor(Math.log(Math.abs(bytes)) / Math.log(k));
-                
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
-            
-            // 优化 Lottie JSON 文件体积
-            function optimizeLottieJson(data) {
-                // 递归处理对象
-                function optimizeObject(obj) {
-                    if (!obj || typeof obj !== 'object') return;
-                    
-                    // 处理数组
-                    if (Array.isArray(obj)) {
-                        for (let i = 0; i < obj.length; i++) {
-                            optimizeObject(obj[i]);
-                        }
-                        return;
-                    }
-                    
-                    // 处理对象
-                    const keys = Object.keys(obj);
-                    for (const key of keys) {
-                        const value = obj[key];
-                        
-                        // 移除 null 和 undefined 值
-                        if (value === null || value === undefined) {
-                            delete obj[key];
-                            continue;
-                        }
-                        
-                        // 移除空数组
-                        if (Array.isArray(value) && value.length === 0) {
-                            delete obj[key];
-                            continue;
-                        }
-                        
-                        // 移除空对象
-                        if (typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0) {
-                            delete obj[key];
-                            continue;
-                        }
-                        
-                        // 递归处理嵌套对象
-                        optimizeObject(value);
-                    }
-                }
-                
-                optimizeObject(data);
-            }
-            
-            // 移除 Lottie 水印的核心函数
-            function removeLottieWatermark(lottieData) {
-                if (!lottieData || !lottieData.layers || !Array.isArray(lottieData.layers)) {
-                    throw new Error('无效的 Lottie JSON 格式');
-                }
-                
-                // 创建一个深拷贝，避免修改原始数据
-                const processedData = JSON.parse(JSON.stringify(lottieData));
-                
-                // 查找并移除水印图层 (ind:12345679)
-                const originalLayersCount = processedData.layers.length;
-                processedData.layers = processedData.layers.filter(layer => {
-                    // 检查图层的 ind 属性是否为 12345679
-                    return layer.ind !== 12345679;
-                });
-                
-                // 检查是否有图层被移除
-                const removedLayersCount = originalLayersCount - processedData.layers.length;
-                
-                if (removedLayersCount === 0) {
-                    console.log('未找到水印图层 (ind:12345679)');
-                } else {
-                    console.log(`已移除 ${removedLayersCount} 个水印图层`);
-                }
-                
-                return processedData;
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
